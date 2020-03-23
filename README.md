@@ -1,8 +1,10 @@
 # BPF Enabled Openshift Image
 
+[Quay Image Tags](https://quay.io/repository/ryan_phillips/ocp4-bpf?tab=tags)
+
 Runs a BPF enabled image on openshift.
 
-Note: Each image is dependent on the kernel running on the node.
+Note: The image is dependent on the kernel running on the node.
 
 ```
 podman run --rm --privileged \
