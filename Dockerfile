@@ -36,3 +36,6 @@ RUN rm -rf bcc
 RUN ln -s /usr/bin/python3 /usr/bin/python
 
 RUN yum clean all
+
+ENV PATH="/usr/share/bcc/tools:${PATH}"
+WORKDIR /usr/share/bcc/tools
