@@ -21,7 +21,7 @@
 BEGIN
 {
 	printf("Tracing sync syscalls... Hit Ctrl-C to end.\n");
-	printf("%-9s %-6s %-16s %s\n", "TIME", "PID", "COMM", "EVENT");
+	printf("%-9s %-14s %-18s %-6s %-16s %s\n", "TIME", "DURATION(ms)", "TOTAL SO FAR(ms)", "PID", "COMM", "EVENT");
 }
 
 tracepoint:syscalls:sys_enter_sync,
@@ -31,6 +31,26 @@ tracepoint:syscalls:sys_enter_fdatasync,
 tracepoint:syscalls:sys_enter_sync_file_range,
 tracepoint:syscalls:sys_enter_msync
 {
+	@start[pid] = nsecs;
+}
+
+tracepoint:syscalls:sys_exit_sync,
+tracepoint:syscalls:sys_exit_syncfs,
+tracepoint:syscalls:sys_exit_fsync,
+tracepoint:syscalls:sys_exit_fdatasync,
+tracepoint:syscalls:sys_exit_sync_file_range,
+tracepoint:syscalls:sys_exit_msync
+{
+        @duration = (nsecs - @start[pid]) / 1000000;
+	delete(@start[pid]);
+	@total_so_far += @duration;
+
 	time("%H:%M:%S  ");
-	printf("%-6d %-16s %s\n", pid, comm, probe);
+	printf("%14d %18d %-6d %-16s %s\n", @duration, @total_so_far, pid, comm, probe);
+}
+
+
+END
+{
+	clear(@start);
 }
