@@ -31,7 +31,7 @@ tracepoint:syscalls:sys_enter_fdatasync,
 tracepoint:syscalls:sys_enter_sync_file_range,
 tracepoint:syscalls:sys_enter_msync
 {
-	@start[pid] = nsecs;
+	@start[tid] = (uint64) (nsecs / 1000);
 }
 
 tracepoint:syscalls:sys_exit_sync,
@@ -41,12 +41,16 @@ tracepoint:syscalls:sys_exit_fdatasync,
 tracepoint:syscalls:sys_exit_sync_file_range,
 tracepoint:syscalls:sys_exit_msync
 {
-        @duration = (nsecs - @start[pid]) / 1000000;
-	delete(@start[pid]);
-	@total_so_far += @duration;
+	$now = nsecs / 1000;
+	$duration = (uint64) 0;
+	if ($now > @start[tid] && @start[tid] != 0) {
+		$duration = ($now - @start[tid]) / 1000;
+	}
+	delete(@start[tid]);
+	@total_so_far = (uint64) (@total_so_far + $duration);
 
 	time("%H:%M:%S  ");
-	printf("%14d %18d %-6d %-16s %s\n", @duration, @total_so_far, pid, comm, probe);
+	printf("%14d %18d %-6d %-16s %s\n", $duration, @total_so_far, pid, comm, probe);
 }
 
 
