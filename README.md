@@ -13,7 +13,7 @@ podman run --rm --privileged \
   quay.io/ryan_phillips/ocp4-bpf:4.18.0-147.5.1.el8_1.x86_64
 ```
 
-daemonset to run syncsnooop on nodes:
+daemonset to run syncsnoop on nodes:
 
 ```
 apiVersion: apps/v1
