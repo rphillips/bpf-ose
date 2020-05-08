@@ -45,6 +45,7 @@ RUN cd bpftrace && \
       -DEMBED_LIBCLANG_ONLY:BOOL=$EMBED_LIBCLANG_ONLY \
       -DLLVM_VERSION=$LLVM_VERSION "${CMAKE_EXTRA_FLAGS}" .. && \
       make && cp src/bpftrace /usr/bin
+RUN cd bpftrace && cp -r tools /
 RUN rm -rf bpftrace
 
 RUN yum clean all
