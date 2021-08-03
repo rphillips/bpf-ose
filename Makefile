@@ -1,6 +1,6 @@
 DOCKER ?= docker
 REPO ?= quay.io/ryan_phillips/ocp4-bpf
-KERNEL_VER ?= 4.18.0-147.8.1.el8_1.x86_64
+KERNEL_VER ?= latest
 
 .PHONY: build
 build:
